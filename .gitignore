@@ -1,0 +1,7 @@
+*.db
+config.local.yaml
+.env
+__pycache__/
+profile.md
+credentials.json
+token.json

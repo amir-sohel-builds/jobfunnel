@@ -1,0 +1,36 @@
+# Edit this file. Everything here is deterministic: no LLM calls.
+# Slugs are the company's job-board id (the part after boards.greenhouse.io/, jobs.lever.co/, jobs.ashbyhq.com/).
+# These are examples; a wrong slug is skipped with a warning.
+companies:
+  greenhouse: [stripe, datadog, cloudflare, airbnb]
+  lever: []
+  ashby: [ramp, notion]
+
+title_include: '(technical program|program manager|tpm|technical project)'
+title_exclude: '(intern|associate|junior|coordinator|assistant|contract)'
+
+# Location must match this. Add cities/provinces as needed.
+location_include: '(canada|toronto|ontario|vancouver|montreal|united states|usa|\bus\b|remote|north america|americas)'
+location_exclude: '(emea|apac|europe|india|latam|germany|uk\b|united kingdom|australia)'
+
+# Points
+score:
+  seniority: {staff: 25, principal: 25, senior: 15, lead: 10, sr: 15}
+  remote_bonus: 10
+  canada_bonus: 10
+  keywords:            # matched in the description, 5 pts each, capped at keyword_cap
+    - platform
+    - infrastructure
+    - distributed systems
+    - cloud
+    - aws
+    - streaming
+    - api
+    - developer
+    - ai
+    - cross-functional
+    - roadmap
+    - engineering
+  keyword_cap: 30
+  base: 20
+  min_score: 45        # below this a job is stored as 'skipped'

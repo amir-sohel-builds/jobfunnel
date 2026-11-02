@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>jobfunnel</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#eef2f8;--panel:#fff;--ink:#0f1b2d;--mute:#62708a;--line:#dbe3ef;--accent:#2f5bea;--soft:#f4f7fc;
+--s-shortlisted:#7d8ba6;--s-applied:#2f5bea;--s-screen:#7a5af8;--s-interview:#e59a1f;--s-offer:#1f9d6b;--s-rejected:#e5604f;--s-withdrawn:#9aa6bb;--s-new:#7d8ba6;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1220;--panel:#121b2e;--ink:#e8eefb;--mute:#8c9ab5;--line:#22304a;--accent:#6f93ff;--soft:#0f1829;
+--s-applied:#6f93ff;--s-screen:#9b83ff;--s-interview:#f0ac3f;--s-offer:#43c28d;--s-rejected:#f0786a;color-scheme:dark}}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:400 15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+button,select,input{font:inherit;color:inherit}
+.bar{display:flex;align-items:center;gap:20px;padding:14px 28px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font:800 19px "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.mark{width:26px;height:26px}
+nav{display:flex;gap:4px;flex:1}
+nav button{border:0;background:none;padding:7px 14px;border-radius:8px;color:var(--mute);font-weight:500;cursor:pointer}
+nav button[aria-current=true]{background:var(--soft);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn{border:1px solid var(--line);background:var(--panel);padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:500}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:focus-visible,nav button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{max-width:1120px;margin:0 auto;padding:30px 28px 60px}
+h1{font:800 clamp(26px,4vw,40px)/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.03em;margin:0 0 6px;max-width:760px}
+h2{font:700 17px "Bricolage Grotesque",sans-serif;margin:0 0 2px}
+.sub{color:var(--mute);margin:0 0 22px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:16px}
+.kpis{display:flex;gap:34px;flex-wrap:wrap;margin:0 0 22px}
+.kpis div b{display:block;font:800 28px "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.kpis div span{color:var(--mute);font-size:13px}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--ink);font-family:Figtree,system-ui,sans-serif}
+.cols{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+.cols .job{grid-template-columns:48px 1fr}.cols .acts{grid-column:1/-1;justify-content:flex-start}
+.weeks{display:flex;align-items:flex-end;gap:10px;height:130px;margin-top:18px}
+.weeks div{flex:1;background:var(--accent);border-radius:5px 5px 0 0;position:relative;min-height:3px;opacity:.9}
+.weeks i{position:absolute;top:-19px;left:0;right:0;text-align:center;font-size:12px;font-style:normal;color:var(--mute)}
+.wl{display:flex;gap:10px;font-size:11px;color:var(--mute);margin-top:6px}.wl span{flex:1;text-align:center}
+.job{display:grid;grid-template-columns:48px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.job:last-child{border:0}
+.ring{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0)}
+.ring span{width:34px;height:34px;border-radius:50%;background:var(--panel);display:grid;place-items:center}
+.jt{font-weight:700}.jt a{color:inherit;text-decoration:none}.jt a:hover{text-decoration:underline}
+.jm{color:var(--mute);font-size:13px}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.acts .btn{padding:5px 11px;font-size:13px}
+.search{width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);margin-bottom:12px}
+.board{display:grid;grid-template-columns:repeat(6,minmax(158px,1fr));gap:12px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:10px;min-height:260px}
+.col h3{margin:2px 4px 10px;font-size:13px;display:flex;justify-content:space-between;color:var(--mute);font-weight:700}
+.col h3 b{color:var(--c)}
+.col.over{outline:2px dashed var(--c)}
+.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:9px 10px;margin-bottom:8px;cursor:grab;font-size:13px}
+.card b{display:block}.card select{margin-top:6px;width:100%;font-size:12px;padding:3px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.empty{color:var(--mute);padding:26px 0;text-align:center}
+dialog{width:min(760px,94vw);max-height:86vh;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);padding:20px}
+dialog::backdrop{background:rgba(8,14,26,.55)}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+pre{white-space:pre-wrap;font:14px/1.6 Figtree,system-ui,sans-serif;max-height:56vh;overflow:auto;margin:14px 0}
+.seg{display:inline-flex;gap:2px;padding:3px;background:var(--soft);border:1px solid var(--line);border-radius:10px;margin-bottom:20px}
+.seg button{border:0;background:none;padding:6px 12px;border-radius:7px;cursor:pointer;color:var(--mute);font-weight:500}
+.seg button[aria-pressed=true]{background:var(--panel);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.chip{font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;color:var(--c);border:1px solid var(--c);white-space:nowrap}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+@media(max-width:820px){.cols{grid-template-columns:1fr}.job{grid-template-columns:44px 1fr}.acts{grid-column:1/-1;justify-content:flex-start}.bar,main{padding-left:16px;padding-right:16px}}
+@media(prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="logo"><svg class="mark" viewBox="0 0 26 26" aria-hidden="true"><path d="M2 3h22l-8 9v8l-6 3v-11z" fill="var(--accent)"/></svg>jobfunnel</div>
+  <nav id="nav"></nav>
+  <button class="btn pri" id="refresh">Refresh jobs</button>
+</div>
+<main id="app"></main>
+<dialog id="dlg"><div class="dh"><h2>Tailored materials</h2><div><button class="btn" id="dcopy">Copy</button> <button class="btn" id="dregen">Regenerate</button> <button class="btn" id="dclose">Close</button></div></div><pre id="dtxt"></pre><p class="jm">Drafted only from your profile.md. Read it before you use it.</p></dialog>
+<div id="toast" role="status"></div>
+<script>
+var S=null,view="overview",q="",days=0;
+var ST=[["applied","Applied"],["screen","Screen"],["interview","Interview"],["offer","Offer"]];
+var LBL={new:"New",shortlisted:"Shortlisted",applied:"Applied",screen:"Screen",interview:"Interview",offer:"Offer",rejected:"Rejected",withdrawn:"Withdrawn"};
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function api(p,o){return fetch(p,o).then(function(r){return r.json()})}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.className="on";setTimeout(function(){t.className=""},2600)}
+function load(){return api("/api/state"+(days?"?days="+days:"")).then(function(d){S=d;render()})}
+function mark(id,st){return api("/api/mark",{method:"POST",body:JSON.stringify({id:id,status:st})}).then(function(r){if(r.error)toast(r.error);return load()})}
+function nav(){document.getElementById("nav").innerHTML=[["overview","Overview"],["matches","Matches"],["board","Board"],["inbox","Inbox"]].map(function(v){return '<button data-v="'+v[0]+'"'+(view==v[0]?' aria-current="true"':"")+'>'+v[1]+'</button>'}).join("")}
+document.getElementById("nav").onclick=function(e){var v=e.target.dataset.v;if(v){view=v;render()}};
+document.getElementById("refresh").onclick=function(){var b=this;b.disabled=true;b.textContent="Fetching…";
+  api("/api/fetch",{method:"POST",body:"{}"}).then(function(r){toast(r.error||(r.new+" new jobs, "+r.kept+" worth a look"));return load()}).catch(function(){toast("Fetch failed. Check config.yaml and your connection.")}).then(function(){b.disabled=false;b.textContent="Refresh jobs"})};
+
+function rib(x0,y0,x1,y1,h,c,o){h=Math.max(h,2);var m=(x0+x1)/2;return '<path d="M'+x0+' '+y0+'C'+m+' '+y0+' '+m+' '+y1+' '+x1+' '+y1+'L'+x1+' '+(y1+h)+'C'+m+' '+(y1+h)+' '+m+' '+(y0+h)+' '+x0+' '+(y0+h)+'Z" style="fill:var(--'+c+')" opacity="'+o+'"/>'}
+function sankey(f){
+  var r=f.reached,U=150/Math.max(r[0],1),X=[10,225,440,655],W=14,Y=44,o='<svg viewBox="0 0 860 250" role="img" aria-label="Application funnel">';
+  for(var i=0;i<4;i++){
+    var c="s-"+ST[i][0],h=Math.max(r[i]*U,r[i]?2:0),x=X[i],nx=i<3?r[i+1]:0,dy=Y+nx*U;
+    if(i<3&&nx)o+=rib(x+W,Y,X[i+1],Y,nx*U,c,.28);
+    var sk=[[f.waiting[i],i==3?"deciding":"waiting",c],[f.closed[i],i==3?"declined":"closed","s-rejected"]],yy=dy+6;
+    sk.forEach(function(s){if(!s[0])return;var sh=Math.max(s[0]*U,3);
+      o+=rib(x+W,dy,x+W+86,yy,s[0]*U,s[2],.28)+'<rect x="'+(x+W+86)+'" y="'+yy+'" width="'+W+'" height="'+sh+'" rx="3" style="fill:var(--'+s[2]+')"/><text x="'+(x+W+86+W+7)+'" y="'+(yy+Math.max(sh/2,4)+4)+'" font-size="13">'+s[0]+' '+s[1]+'</text>';
+      dy+=s[0]*U;yy+=sh+8});
+    o+='<rect x="'+x+'" y="'+Y+'" width="'+W+'" height="'+h+'" rx="3" style="fill:var(--'+c+')"/>'
+      +'<text x="'+x+'" y="14" font-size="13" style="fill:var(--mute)">'+ST[i][1]+'</text><text x="'+x+'" y="36" font-size="22" font-weight="800" style="font-family:\'Bricolage Grotesque\',sans-serif">'+r[i]+'</text>'
+      +(i?'<text x="'+(x+34)+'" y="36" font-size="12" style="fill:var(--mute)">'+Math.round(r[i]/Math.max(r[i-1],1)*100)+'% of '+ST[i-1][1].toLowerCase()+'</text>':'');
+  }
+  return o+'</svg>'}
+
+function overview(){
+  var r=S.funnel.reached,a=r[0],heard=r[1]+S.funnel.closed[0],hr=a?Math.round(heard/a*100):0;
+  var top=S.jobs.filter(function(j){return j.status=="new"}).slice(0,4);
+  var wm=Math.max.apply(null,S.weeks.map(function(w){return w.n}).concat([1]));
+  var h=a?"You’ve applied to "+a+" role"+(a>1?"s":"")+" and reached "+r[2]+" interview"+(r[2]==1?"":"s")+".":"Nothing applied yet. Start with your top matches.";
+  return '<h1>'+h+'</h1><p class="sub">Every application, from first send to final answer.</p><div class="seg" role="group" aria-label="Time range">'+[[30,'Last 30 days'],[90,'Last 90 days'],[0,'All time']].map(function(d){return '<button data-d="'+d[0]+'"'+(days==d[0]?' aria-pressed="true"':'')+'>'+d[1]+'</button>'}).join('')+'</div>'
+  +'<div class="kpis"><div><b>'+a+'</b><span>applied</span></div><div><b>'+hr+'%</b><span>heard back</span></div><div><b>'+r[2]+'</b><span>reached interview</span></div><div><b>'+r[3]+'</b><span>offers</span></div></div>'
+  +'<div class="panel"><h2>Funnel</h2><p class="sub" style="margin-bottom:10px">Where each application is now, and where the rest stopped.</p>'+sankey(S.funnel)+'</div>'
+  +'<div class="cols"><div class="panel"><h2>Applications per week</h2><div class="weeks">'+S.weeks.map(function(w){return '<div style="height:'+(w.n/wm*100)+'%"><i>'+w.n+'</i></div>'}).join("")+'</div><div class="wl">'+S.weeks.map(function(w){return '<span>'+w.label+'</span>'}).join("")+'</div></div>'
+  +'<div class="panel"><h2>Worth a look next</h2>'+(top.length?top.map(jobRow).join(""):'<div class="empty">No new matches. Try Refresh jobs.</div>')+'</div></div>'}
+
+function jobRow(j){
+  return '<div class="job"><div class="ring" style="--p:'+j.score+'"><span>'+j.score+'</span></div><div><div class="jt"><a href="'+esc(j.url)+'" target="_blank" rel="noopener">'+esc(j.title)+'</a></div><div class="jm">'+esc(j.company)+' · '+esc(j.location)+'</div></div>'
+  +'<div class="acts">'+(j.status=="new"?'<button class="btn" data-m="'+esc(j.id)+'" data-s="shortlisted">Shortlist</button><button class="btn" data-m="'+esc(j.id)+'" data-s="skipped">Skip</button>':'')
+  +'<button class="btn" data-t="'+esc(j.id)+'">Tailor</button>'+(j.status=="applied"?'':'<button class="btn pri" data-m="'+esc(j.id)+'" data-s="applied">Mark applied</button>')+'</div></div>'}
+
+function matches(){
+  var L=S.jobs.filter(function(j){return(j.status=="new"||j.status=="shortlisted")&&(j.company+" "+j.title+" "+j.location).toLowerCase().indexOf(q)>-1});
+  return '<h1>Matches</h1><p class="sub">Scored by your rules in config.yaml. Open the posting, apply on the company site, then mark it applied.</p>'
+  +'<input class="search" id="q" placeholder="Filter by company, title, location" value="'+esc(q)+'"><div class="panel">'+(L.length?L.map(jobRow).join(""):'<div class="empty">No matches yet. Add companies in config.yaml, then Refresh jobs.</div>')+'</div>'}
+
+var COLS=[["shortlisted","Shortlisted"],["applied","Applied"],["screen","Screen"],["interview","Interview"],["offer","Offer"],["rejected","Closed"]];
+function board(){
+  return '<h1>Board</h1><p class="sub">Drag a card to a new column, or use its menu.</p><div class="board">'+COLS.map(function(c){
+    var L=S.jobs.filter(function(j){return c[0]=="rejected"?(j.status=="rejected"||j.status=="withdrawn"):j.status==c[0]});
+    return '<div class="col" data-col="'+c[0]+'" style="--c:var(--s-'+c[0]+')"><h3>'+c[1]+'<b>'+L.length+'</b></h3>'+L.map(function(j){
+      return '<div class="card" draggable="true" data-id="'+esc(j.id)+'" style="--c:var(--s-'+j.status+')"><b>'+esc(j.company)+'</b>'+esc(j.title)+'<select data-sel="'+esc(j.id)+'" aria-label="Status">'+Object.keys(LBL).filter(function(k){return k!="new"}).map(function(k){return '<option value="'+k+'"'+(k==j.status?" selected":"")+'>'+LBL[k]+'</option>'}).join("")+'</select></div>'}).join("")+'</div>'}).join("")+'</div>'}
+
+function inbox(){
+  var KL={updated:"Status updated",review:"Needs a look"};
+  return '<h1>Inbox</h1><p class="sub">Employer emails your rules recognised. Run sync-gmail to update this list.</p><div class="panel">'+(S.mail.length?S.mail.map(function(m){
+    var d=new Date(m.ts*1000).toLocaleDateString(undefined,{month:"short",day:"numeric"});
+    return '<div class="job" style="grid-template-columns:60px 1fr auto"><div class="jm">'+d+'</div><div><div class="jt">'+esc(m.subject)+'</div><div class="jm">'+esc(m.company||m.sender)+(m.kind?' · '+esc(m.kind):'')+'</div></div><span class="chip" style="--c:var(--s-'+(m.outcome=="review"?"interview":"offer")+')">'+KL[m.outcome]+'</span></div>'}).join(""):'<div class="empty">Nothing yet. Run python -m jobfunnel.cli sync-gmail</div>')+'</div>'}
+function render(){
+  nav();var a=document.getElementById("app");
+  a.innerHTML=view=="overview"?overview():view=="matches"?matches():view=="inbox"?inbox():board();
+  var s=document.getElementById("q");if(s)s.oninput=function(){q=this.value.toLowerCase();var p=this.selectionStart;render();var n=document.getElementById("q");n.focus();n.setSelectionRange(p,p)};
+}
+document.getElementById("app").addEventListener("click",function(e){var m=e.target.dataset;if(m.m)mark(m.m,m.s);if(m.d!==undefined){days=+m.d;load()}if(m.t)tailor(m.t,false)});
+var DLG=document.getElementById("dlg"),TJ=null;
+function tailor(id,force){TJ=id;document.getElementById("dtxt").textContent="Writing… this takes a few seconds.";if(!DLG.open)DLG.showModal();
+  api("/api/tailor",{method:"POST",body:JSON.stringify({id:id,force:force})}).then(function(r){document.getElementById("dtxt").textContent=r.error||r.text}).catch(function(){document.getElementById("dtxt").textContent="Request failed."})}
+document.getElementById("dcopy").onclick=function(){navigator.clipboard.writeText(document.getElementById("dtxt").textContent);toast("Copied")};
+document.getElementById("dregen").onclick=function(){tailor(TJ,true)};
+document.getElementById("dclose").onclick=function(){DLG.close()};
+document.getElementById("app").addEventListener("change",function(e){if(e.target.dataset.sel)mark(e.target.dataset.sel,e.target.value)});
+var drag=null;
+document.addEventListener("dragstart",function(e){var c=e.target.closest&&e.target.closest(".card");if(c)drag=c.dataset.id});
+document.addEventListener("dragover",function(e){var c=e.target.closest&&e.target.closest(".col");if(c&&drag){e.preventDefault();c.classList.add("over")}});
+document.addEventListener("dragleave",function(e){var c=e.target.closest&&e.target.closest(".col");if(c)c.classList.remove("over")});
+document.addEventListener("drop",function(e){var c=e.target.closest&&e.target.closest(".col");if(c&&drag){e.preventDefault();mark(drag,c.dataset.col);drag=null}});
+load().catch(function(){document.getElementById("app").innerHTML='<div class="empty">Could not load data. Is the server running?</div>'});
+</script>
+</body>
+</html>
