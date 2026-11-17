@@ -24,6 +24,14 @@ class Scoring(unittest.TestCase):
         self.assertEqual(score_job(self.j("TPM Intern", "Remote"), CFG)[0], 0)
         self.assertEqual(score_job(self.j("Senior TPM", "Berlin, Germany"), CFG)[0], 0)
         self.assertEqual(score_job(self.j("Software Engineer", "Toronto"), CFG)[0], 0)
+    def test_non_technical_program_managers_excluded(self):
+        # Bare "Program Manager" titles without technical/tpm are not TPM roles.
+        # Verified against live board data: these scored 45-75 before the fix.
+        self.assertEqual(score_job(self.j("Principal Partner Program Manager - Resellers", "Boston, USA"), CFG)[0], 0)
+        self.assertEqual(score_job(self.j("Staff Program Manager, Event Design", "Remote, USA"), CFG)[0], 0)
+        self.assertEqual(score_job(self.j("Senior Program Manager, Design", "New York, USA"), CFG)[0], 0)
+        self.assertEqual(score_job(self.j("Recruiting Program Manager", "Remote, USA"), CFG)[0], 0)
+        self.assertEqual(score_job(self.j("Marketing Technology Program Manager", "Remote, USA"), CFG)[0], 0)
 
 class Mail(unittest.TestCase):
     def test_classify_order(self):

@@ -42,3 +42,7 @@ Copy `profile.example.md` to `profile.md` and fill in your real resume text. The
     python -m jobfunnel.cli tailor <id>
 
 or press Tailor on a job in the web app. One call per job you choose, cached, uses only facts from your profile and lists gaps instead of inventing experience.
+
+## License
+
+MIT. See LICENSE.
