@@ -15,7 +15,7 @@ applied, screen, interview, offer, rejected, withdrawn.
 
 ## Web app
 
-    python -m jobfunnel.cli serve --demo     # sample data
+    python -m jobfunnel.cli serve --demo     # sample data, in jobfunnel-demo.db
     python -m jobfunnel.cli serve            # your data, http://localhost:8765
 
 Overview (funnel, 30/90 days/all time), Matches, Board (drag cards), Inbox.

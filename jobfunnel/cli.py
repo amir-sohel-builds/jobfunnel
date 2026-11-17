@@ -60,6 +60,13 @@ def cmd_serve(a, cfg, con):
     from . import server
     server.run(cfg, a.db, a.port, a.demo)
 
+def resolve_db(a):
+    """Demo mode always uses a separate database file, so sample data
+    can never mix with real applications."""
+    if a.cmd == "serve" and getattr(a, "demo", False) and a.db == "jobfunnel.db":
+        return "jobfunnel-demo.db"
+    return a.db
+
 def main(argv=None):
     p = argparse.ArgumentParser(prog="jobfunnel")
     p.add_argument("--config", default="config.yaml"); p.add_argument("--db", default="jobfunnel.db")
@@ -72,6 +79,7 @@ def main(argv=None):
     t = sub.add_parser("tailor"); t.add_argument("id"); t.add_argument("--force", action="store_true"); t.set_defaults(f=cmd_tailor)
     v = sub.add_parser("serve"); v.add_argument("--port", type=int, default=8765); v.add_argument("--demo", action="store_true"); v.set_defaults(f=cmd_serve)
     a = p.parse_args(argv)
+    a.db = resolve_db(a)
     a.f(a, load_cfg(a.config), db.connect(a.db))
 
 if __name__ == "__main__":

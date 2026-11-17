@@ -1,5 +1,5 @@
-import time, unittest, yaml
-from jobfunnel import db, mailrules as mr, server
+import argparse, time, unittest, yaml
+from jobfunnel import cli, db, mailrules as mr, server
 from jobfunnel.score import score_job
 
 CFG = yaml.safe_load(open("config.yaml"))
@@ -72,6 +72,21 @@ class Funnel(unittest.TestCase):
         con = db.connect(":memory:"); add(con, "x:1", "acme", "TPM", "new")
         db.set_status(con, "x:1", "applied")
         self.assertEqual(server.state(con)["funnel"]["reached"][0], 1)
+
+class DemoDb(unittest.TestCase):
+    def test_demo_uses_separate_db(self):
+        # Regression: serve --demo once seeded 40 fake jobs into the real
+        # jobfunnel.db, crowding the list and the report.
+        a = argparse.Namespace(cmd="serve", demo=True, db="jobfunnel.db")
+        self.assertEqual(cli.resolve_db(a), "jobfunnel-demo.db")
+    def test_real_serve_keeps_real_db(self):
+        a = argparse.Namespace(cmd="serve", demo=False, db="jobfunnel.db")
+        self.assertEqual(cli.resolve_db(a), "jobfunnel.db")
+    def test_explicit_db_is_respected(self):
+        a = argparse.Namespace(cmd="serve", demo=True, db="custom.db")
+        self.assertEqual(cli.resolve_db(a), "custom.db")
+        a = argparse.Namespace(cmd="fetch", demo=False, db="jobfunnel.db")
+        self.assertEqual(cli.resolve_db(a), "jobfunnel.db")
 
 if __name__ == "__main__":
     unittest.main()
